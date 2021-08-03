@@ -3,6 +3,7 @@ import styled from "styled-components";
 import "./App.css";
 
 import Todo from "./Todo";
+import { FaTrash } from "react-icons/fa";
 
 const reducer = (state, action) => {
   if (action.type === "ADD_TODO") {
@@ -10,11 +11,11 @@ const reducer = (state, action) => {
     return {
       ...state,
       todoList: [...state.todoList, newToDo],
-      isSucces: true
+      isSucces: true,
     };
   }
   if (action.type === "REMOVE_TODO") {
-    const leftToDo = state.todoList.filter(todo => {
+    const leftToDo = state.todoList.filter((todo) => {
       return todo.id !== Number(action.idPersonRemove);
     });
     return { ...state, todoList: leftToDo, isSucces: true };
@@ -24,7 +25,7 @@ const reducer = (state, action) => {
 
 const defaultState = {
   todoList: [],
-  isSucces: false
+  isSucces: false,
 };
 
 function App() {
@@ -40,13 +41,13 @@ function App() {
     const localMemo = localStorage.getItem("todo");
 
     if (localMemo !== null) {
-      JSON.parse(localMemo).forEach(element => {
+      JSON.parse(localMemo).forEach((element) => {
         dispatch({
           type: "ADD_TODO",
           payload: {
             id: element.id,
-            name: element.name
-          }
+            name: element.name,
+          },
         });
         tmpId = Number(element.id);
         setId(tmpId + 1);
@@ -54,26 +55,26 @@ function App() {
     }
   }, []);
 
-  const handlerSubmit = e => {
+  const handlerSubmit = (e) => {
     e.preventDefault();
     const localMemo = localStorage.getItem("todo");
 
     if (localMemo !== null)
-      JSON.parse(localMemo).forEach(element => {
+      JSON.parse(localMemo).forEach((element) => {
         TMP_List.push(element);
       });
 
     if (name) {
       tmp_Dictionary = {
         type: "ADD_TODO",
-        payload: { id: id, name: name.toString() }
+        payload: { id: id, name: name.toString() },
       };
       dispatch(tmp_Dictionary);
       setId(id + 1);
 
       TMP_List.push({
         id: tmp_Dictionary.payload.id,
-        name: tmp_Dictionary.payload.name
+        name: tmp_Dictionary.payload.name,
       });
     }
 
@@ -87,6 +88,10 @@ function App() {
     }, 2000);
   };
 
+  const handlerEdit = (e) => {
+    console.log(e);
+  };
+
   return (
     <div className="App">
       <Wrapper>
@@ -94,7 +99,7 @@ function App() {
           style={{
             textAlign: "center",
             fontWeight: "bolder",
-            fontSize: "18px"
+            fontSize: "18px",
           }}
         >
           {message}
@@ -102,7 +107,7 @@ function App() {
             style={{
               textAlign: "center",
               fontWeight: "bolder",
-              fontSize: "18px"
+              fontSize: "18px",
             }}
           >
             <form
@@ -110,7 +115,7 @@ function App() {
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
               }}
               onSubmit={handlerSubmit}
             >
@@ -119,11 +124,12 @@ function App() {
                 className="input"
                 value={name}
                 required
-                onChange={e => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
               />
             </form>
           </div>
         </div>
+
         {state.todoList.map((todo, index) => {
           return (
             <div key={index} className="todo">
@@ -133,18 +139,18 @@ function App() {
                 onClick={() => {
                   let leftItems = JSON.parse(
                     localStorage.getItem("todo")
-                  ).filter(element => {
+                  ).filter((element) => {
                     return element.id !== todo.id;
                   });
                   localStorage.setItem("todo", JSON.stringify(leftItems));
 
                   dispatch({
                     type: "REMOVE_TODO",
-                    idPersonRemove: todo.id
+                    idPersonRemove: todo.id,
                   });
                 }}
               >
-                remove
+                remove{<FaTrash />}
               </button>
             </div>
           );
@@ -159,10 +165,8 @@ export default App;
 const Wrapper = styled.section`
   displey: flex;
   flex-direction: column;
-  margin: auto;
+  margin: 0px auto;
   height: 100%;
-  /*   background-color: #fbab7e;
-  background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%); */
 
   input {
     width: 300px;
@@ -194,7 +198,7 @@ const Wrapper = styled.section`
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    min-width: 100px;
+    min-width: 50px;
     height: 20px;
     padding: 5px;
     border-radius: 5px;
@@ -210,7 +214,7 @@ const Wrapper = styled.section`
 
   .todo-item {
     displey: flex;
-    justifyContent: center;
+    justifycontent: center;
     padding: 15px;
   }
 `;

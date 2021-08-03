@@ -4,6 +4,7 @@ import "./App.css";
 
 import Todo from "./Todo";
 import { FaTrash } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 
 const reducer = (state, action) => {
   if (action.type === "ADD_TODO") {
@@ -30,12 +31,11 @@ const defaultState = {
 
 function App() {
   const [id, setId] = useState(0);
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [message, setMessage] = useState("To-Do");
   const [state, dispatch] = useReducer(reducer, defaultState);
   let TMP_List = [];
   let tmp_Dictionary = {};
-  let tmpId = 0;
 
   useEffect(() => {
     const localMemo = localStorage.getItem("todo");
@@ -49,13 +49,13 @@ function App() {
             name: element.name,
           },
         });
-        tmpId = Number(element.id);
+        let tmpId = Number(element.id);
         setId(tmpId + 1);
       });
     }
   }, []);
 
-  const handlerSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const localMemo = localStorage.getItem("todo");
 
@@ -88,8 +88,25 @@ function App() {
     }, 2000);
   };
 
-  const handlerEdit = (e) => {
-    console.log(e);
+  const handleEdit = (e, id) => {
+    let valueToEdit = e.target.value;
+    if (valueToEdit !== undefined) {
+      setName(valueToEdit);
+    }
+    console.log(valueToEdit);
+
+    let leftItems = JSON.parse(localStorage.getItem("todo")).filter(
+      (element) => {
+        return element.id !== Number(id);
+      }
+    );
+
+    localStorage.setItem("todo", JSON.stringify(leftItems));
+    console.log(leftItems);
+    dispatch({
+      type: "REMOVE_TODO",
+      idPersonRemove: id,
+    });
   };
 
   return (
@@ -117,12 +134,12 @@ function App() {
                 flexDirection: "column",
                 alignItems: "center",
               }}
-              onSubmit={handlerSubmit}
+              onSubmit={handleSubmit}
             >
               <input
                 style={{ outline: "none", borderBottom: "2px solid #64edcf" }}
                 className="input"
-                value={name}
+                value={name || ""}
                 required
                 onChange={(e) => setName(e.target.value)}
               />
@@ -134,24 +151,34 @@ function App() {
           return (
             <div key={index} className="todo">
               <Todo todo={todo.name} id={index} />
-              <button
-                className="remove-todo"
-                onClick={() => {
-                  let leftItems = JSON.parse(
-                    localStorage.getItem("todo")
-                  ).filter((element) => {
-                    return element.id !== todo.id;
-                  });
-                  localStorage.setItem("todo", JSON.stringify(leftItems));
+              <div className="wrapper-btns">
+                <button
+                  className="btn edit-todo"
+                  id={index}
+                  value={todo.name}
+                  onClick={(e) => handleEdit(e, todo.id)}
+                >
+                  Edit {<FaEdit />}
+                </button>
+                <button
+                  className="btn remove-todo"
+                  onClick={() => {
+                    let leftItems = JSON.parse(
+                      localStorage.getItem("todo")
+                    ).filter((element) => {
+                      return element.id !== todo.id;
+                    });
+                    localStorage.setItem("todo", JSON.stringify(leftItems));
 
-                  dispatch({
-                    type: "REMOVE_TODO",
-                    idPersonRemove: todo.id,
-                  });
-                }}
-              >
-                remove{<FaTrash />}
-              </button>
+                    dispatch({
+                      type: "REMOVE_TODO",
+                      idPersonRemove: todo.id,
+                    });
+                  }}
+                >
+                  Remove {<FaTrash />}
+                </button>
+              </div>
             </div>
           );
         })}
@@ -193,7 +220,14 @@ const Wrapper = styled.section`
     background: #64edcf;
   }
 
-  .remove-todo {
+  .wrapper-btns {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 150px;
+  }
+
+  .btn {
     displey: flex;
     justify-content: center;
     flex-direction: column;

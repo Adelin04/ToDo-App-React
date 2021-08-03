@@ -2,7 +2,7 @@ import React from "react";
 
 const Todo = ({ id, todo }) => {
   return (
-    <div className='todo-item' id={id} style={{ textAlign: "center" }}>
+    <div className="todo-item" id={id} style={{ textAlign: "center" }}>
       {todo}
     </div>
   );

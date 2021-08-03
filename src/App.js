@@ -124,23 +124,23 @@ function App() {
             </form>
           </div>
         </div>
-        {state.todoList.map((person, index) => {
+        {state.todoList.map((todo, index) => {
           return (
             <div key={index} className="todo">
-              <Todo person={person.name} id={index} />
+              <Todo todo={todo.name} id={index} />
               <button
                 className="remove-todo"
                 onClick={() => {
                   let leftItems = JSON.parse(
                     localStorage.getItem("todo")
                   ).filter(element => {
-                    return element.id !== person.id;
+                    return element.id !== todo.id;
                   });
                   localStorage.setItem("todo", JSON.stringify(leftItems));
 
                   dispatch({
                     type: "REMOVE_TODO",
-                    idPersonRemove: person.id
+                    idPersonRemove: todo.id
                   });
                 }}
               >

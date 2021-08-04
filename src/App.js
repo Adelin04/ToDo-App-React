@@ -12,11 +12,11 @@ const reducer = (state, action) => {
     return {
       ...state,
       todoList: [...state.todoList, newToDo],
-      isSucces: true,
+      isSucces: true
     };
   }
   if (action.type === "REMOVE_TODO") {
-    const leftToDo = state.todoList.filter((todo) => {
+    const leftToDo = state.todoList.filter(todo => {
       return todo.id !== Number(action.idPersonRemove);
     });
     return { ...state, todoList: leftToDo, isSucces: true };
@@ -26,12 +26,12 @@ const reducer = (state, action) => {
 
 const defaultState = {
   todoList: [],
-  isSucces: false,
+  isSucces: false
 };
 
 function App() {
   const [id, setId] = useState(0);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [message, setMessage] = useState("To-Do");
   const [state, dispatch] = useReducer(reducer, defaultState);
   let TMP_List = [];
@@ -41,13 +41,13 @@ function App() {
     const localMemo = localStorage.getItem("todo");
 
     if (localMemo !== null) {
-      JSON.parse(localMemo).forEach((element) => {
+      JSON.parse(localMemo).forEach(element => {
         dispatch({
           type: "ADD_TODO",
           payload: {
             id: element.id,
-            name: element.name,
-          },
+            name: element.name
+          }
         });
         let tmpId = Number(element.id);
         setId(tmpId + 1);
@@ -55,26 +55,26 @@ function App() {
     }
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     const localMemo = localStorage.getItem("todo");
 
     if (localMemo !== null)
-      JSON.parse(localMemo).forEach((element) => {
+      JSON.parse(localMemo).forEach(element => {
         TMP_List.push(element);
       });
 
     if (name) {
       tmp_Dictionary = {
         type: "ADD_TODO",
-        payload: { id: id, name: name.toString() },
+        payload: { id: id, name: name.toString() }
       };
       dispatch(tmp_Dictionary);
       setId(id + 1);
 
       TMP_List.push({
         id: tmp_Dictionary.payload.id,
-        name: tmp_Dictionary.payload.name,
+        name: tmp_Dictionary.payload.name
       });
     }
 
@@ -88,24 +88,20 @@ function App() {
     }, 2000);
   };
 
-  const handleEdit = (e, id) => {
-    let valueToEdit = e.target.value;
-    if (valueToEdit !== undefined) {
-      setName(valueToEdit);
+  const handleEdit = (e, id, value) => {
+    if (value !== undefined) {
+      setName(value);
     }
-    console.log(valueToEdit);
 
-    let leftItems = JSON.parse(localStorage.getItem("todo")).filter(
-      (element) => {
-        return element.id !== Number(id);
-      }
-    );
+    let leftItems = JSON.parse(localStorage.getItem("todo")).filter(element => {
+      return element.id !== Number(id);
+    });
 
     localStorage.setItem("todo", JSON.stringify(leftItems));
     console.log(leftItems);
     dispatch({
       type: "REMOVE_TODO",
-      idPersonRemove: id,
+      idPersonRemove: id
     });
   };
 
@@ -116,7 +112,7 @@ function App() {
           style={{
             textAlign: "center",
             fontWeight: "bolder",
-            fontSize: "18px",
+            fontSize: "18px"
           }}
         >
           {message}
@@ -124,7 +120,7 @@ function App() {
             style={{
               textAlign: "center",
               fontWeight: "bolder",
-              fontSize: "18px",
+              fontSize: "18px"
             }}
           >
             <form
@@ -132,7 +128,7 @@ function App() {
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
-                alignItems: "center",
+                alignItems: "center"
               }}
               onSubmit={handleSubmit}
             >
@@ -141,7 +137,7 @@ function App() {
                 className="input"
                 value={name || ""}
                 required
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
               />
             </form>
           </div>
@@ -156,7 +152,7 @@ function App() {
                   className="btn edit-todo"
                   id={index}
                   value={todo.name}
-                  onClick={(e) => handleEdit(e, todo.id)}
+                  onClick={e => handleEdit(e, todo.id, todo.name)}
                 >
                   Edit {<FaEdit />}
                 </button>
@@ -165,14 +161,14 @@ function App() {
                   onClick={() => {
                     let leftItems = JSON.parse(
                       localStorage.getItem("todo")
-                    ).filter((element) => {
+                    ).filter(element => {
                       return element.id !== todo.id;
                     });
                     localStorage.setItem("todo", JSON.stringify(leftItems));
 
                     dispatch({
                       type: "REMOVE_TODO",
-                      idPersonRemove: todo.id,
+                      idPersonRemove: todo.id
                     });
                   }}
                 >

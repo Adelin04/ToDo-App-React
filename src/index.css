@@ -15,10 +15,10 @@ body {
 }
 
 body {
-/*   background: #fbab7e;
+  /*   background: #fbab7e;
   background: linear-gradient(0deg, #fbab7e 0%, #f7ce68 100%) fixed; */
 
-    background: rgb(34, 193, 195);
+  background: rgb(34, 193, 195);
   background: linear-gradient(
       0deg,
       rgba(34, 193, 195, 1) 0%,

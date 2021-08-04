@@ -1,8 +1,9 @@
 import React, { useReducer, useState, useEffect } from "react";
 import styled from "styled-components";
-import "./App.css";
 
+import "./App.css";
 import Todo from "./Todo";
+
 import { FaTrash } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 
@@ -12,11 +13,11 @@ const reducer = (state, action) => {
     return {
       ...state,
       todoList: [...state.todoList, newToDo],
-      isSucces: true
+      isSucces: true,
     };
   }
   if (action.type === "REMOVE_TODO") {
-    const leftToDo = state.todoList.filter(todo => {
+    const leftToDo = state.todoList.filter((todo) => {
       return todo.id !== Number(action.idPersonRemove);
     });
     return { ...state, todoList: leftToDo, isSucces: true };
@@ -26,7 +27,7 @@ const reducer = (state, action) => {
 
 const defaultState = {
   todoList: [],
-  isSucces: false
+  isSucces: false,
 };
 
 function App() {
@@ -41,13 +42,13 @@ function App() {
     const localMemo = localStorage.getItem("todo");
 
     if (localMemo !== null) {
-      JSON.parse(localMemo).forEach(element => {
+      JSON.parse(localMemo).forEach((element) => {
         dispatch({
           type: "ADD_TODO",
           payload: {
             id: element.id,
-            name: element.name
-          }
+            name: element.name,
+          },
         });
         let tmpId = Number(element.id);
         setId(tmpId + 1);
@@ -55,26 +56,26 @@ function App() {
     }
   }, []);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const localMemo = localStorage.getItem("todo");
 
     if (localMemo !== null)
-      JSON.parse(localMemo).forEach(element => {
+      JSON.parse(localMemo).forEach((element) => {
         TMP_List.push(element);
       });
 
     if (name) {
       tmp_Dictionary = {
         type: "ADD_TODO",
-        payload: { id: id, name: name.toString() }
+        payload: { id: id, name: name.toString() },
       };
       dispatch(tmp_Dictionary);
       setId(id + 1);
 
       TMP_List.push({
         id: tmp_Dictionary.payload.id,
-        name: tmp_Dictionary.payload.name
+        name: tmp_Dictionary.payload.name,
       });
     }
 
@@ -93,15 +94,17 @@ function App() {
       setName(value);
     }
 
-    let leftItems = JSON.parse(localStorage.getItem("todo")).filter(element => {
-      return element.id !== Number(id);
-    });
+    let leftItems = JSON.parse(localStorage.getItem("todo")).filter(
+      (element) => {
+        return element.id !== Number(id);
+      }
+    );
 
     localStorage.setItem("todo", JSON.stringify(leftItems));
     console.log(leftItems);
     dispatch({
       type: "REMOVE_TODO",
-      idPersonRemove: id
+      idPersonRemove: id,
     });
   };
 
@@ -112,7 +115,7 @@ function App() {
           style={{
             textAlign: "center",
             fontWeight: "bolder",
-            fontSize: "18px"
+            fontSize: "18px",
           }}
         >
           {message}
@@ -120,7 +123,7 @@ function App() {
             style={{
               textAlign: "center",
               fontWeight: "bolder",
-              fontSize: "18px"
+              fontSize: "18px",
             }}
           >
             <form
@@ -128,7 +131,7 @@ function App() {
                 display: "flex",
                 justifyContent: "center",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
               }}
               onSubmit={handleSubmit}
             >
@@ -137,7 +140,7 @@ function App() {
                 className="input"
                 value={name || ""}
                 required
-                onChange={e => setName(e.target.value)}
+                onChange={(e) => setName(e.target.value)}
               />
             </form>
           </div>
@@ -152,7 +155,7 @@ function App() {
                   className="btn edit-todo"
                   id={index}
                   value={todo.name}
-                  onClick={e => handleEdit(e, todo.id, todo.name)}
+                  onClick={(e) => handleEdit(e, todo.id, todo.name)}
                 >
                   Edit {<FaEdit />}
                 </button>
@@ -161,14 +164,14 @@ function App() {
                   onClick={() => {
                     let leftItems = JSON.parse(
                       localStorage.getItem("todo")
-                    ).filter(element => {
+                    ).filter((element) => {
                       return element.id !== todo.id;
                     });
                     localStorage.setItem("todo", JSON.stringify(leftItems));
 
                     dispatch({
                       type: "REMOVE_TODO",
-                      idPersonRemove: todo.id
+                      idPersonRemove: todo.id,
                     });
                   }}
                 >
@@ -208,6 +211,7 @@ const Wrapper = styled.section`
     align-items: center;
     max-width: 500px;
     height: 30px;
+    height: auto;
     margin: 5px auto;
     padding: 5px;
     border-radius: 5px;
@@ -216,21 +220,30 @@ const Wrapper = styled.section`
     background: #64edcf;
   }
 
+  .todo:hover {
+    /* background: rgb(34, 193, 195);
+    background: linear-gradient(
+      0deg,
+      rgba(34, 193, 195, 1) 0%,
+      rgba(252, 191, 60, 1) 100%
+      )
+      fixed; */
+    background: transparent;
+  }
+
   .wrapper-btns {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 150px;
+    min-width: 150px;
   }
 
   .btn {
     displey: flex;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     min-width: 50px;
     height: 20px;
-    padding: 5px;
     border-radius: 5px;
     border: none;
     background: skyblue;
@@ -245,6 +258,9 @@ const Wrapper = styled.section`
   .todo-item {
     displey: flex;
     justifycontent: center;
-    padding: 15px;
+    align-items: center;
+    margin: 0px 5px;
+    max-width: 330px;
+    height: auto;
   }
 `;
